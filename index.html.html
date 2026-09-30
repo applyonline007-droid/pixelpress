@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f8fb">
+  <meta name="description" content="Convert, resize and merge JPG, PNG, WebP images and PDFs in your browser. Private, simple and free.">
+  <title>PixelPress — Image &amp; PDF Tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="PixelPress home"><span class="brand-mark">P</span><span>pixel<span class="brand-light">press</span></span></a>
+    <span class="privacy"><span class="lock" aria-hidden="true">⌑</span> Your files stay on your device</span>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow"><span></span> FREE IMAGE &amp; PDF TOOLS</div>
+      <h1>Convert. Resize.<br><span>Merge. Done.</span></h1>
+      <p>Make images and PDFs fit your needs. Free, private, and simple.</p>
+    </section>
+
+    <div class="ad-slot ad-top" aria-label="Advertisement space"><span>ADVERTISEMENT</span></div>
+
+    <section class="workspace" aria-label="Image and PDF tools">
+      <div class="card upload-card">
+        <div class="section-title"><span class="step">01</span><div><h2>Choose an image</h2><p>Pick an image to get started</p></div></div>
+        <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Choose or drop an image">
+          <input id="file-input" type="file" accept="image/jpeg,image/png,image/webp,application/pdf,.jpg,.jpeg,.png,.webp,.pdf" multiple hidden>
+          <div class="upload-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 15.5v3A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5v-3"/></svg></div>
+          <strong>Drop images or PDFs here</strong>
+          <span>or <button class="text-button" id="browse-btn" type="button">browse files</button></span>
+          <small>Choose multiple files to merge · Up to 20 MB each</small>
+        </div>
+        <div id="file-info" class="file-list" hidden></div>
+      </div>
+
+      <div class="card settings-card">
+        <div class="section-title"><span class="step">02</span><div><h2>Convert &amp; resize</h2><p>Pick a format and set your size</p></div></div>
+        <label class="field-label" for="output-format">Convert to</label>
+        <select id="output-format" class="select-control"><option value="image/webp">WebP (smaller)</option><option value="image/jpeg">JPG / JPEG</option><option value="image/png">PNG (lossless)</option><option value="application/pdf">PDF</option></select>
+        <div class="settings-divider"></div>
+        <div class="dimensions-head"><label class="field-label">Output dimensions</label><button id="keep-size" class="keep-size active" type="button" aria-pressed="true">Keep original</button></div>
+        <div class="dimension-controls" id="dimension-controls" hidden><label><span>Width</span><input id="width" type="number" min="1" max="20000" placeholder="e.g. 1200"></label><span class="dimension-x">×</span><label><span>Height</span><input id="height" type="number" min="1" max="20000" placeholder="e.g. 800"></label><select id="dimension-unit" class="unit-select" aria-label="Dimension unit"><option value="px">px</option><option value="cm">cm</option><option value="in">inches</option></select></div>
+        <label class="dpi-row" id="dpi-row" hidden>Print resolution <input id="dpi" type="number" min="72" max="600" value="300"> <span>DPI</span></label>
+        <div class="settings-divider"></div>
+        <div class="quality-head"><label for="quality">Image quality</label><span class="quality-value"><b id="quality-value">75</b><small>%</small></span></div>
+        <input id="quality" class="slider" type="range" min="10" max="100" value="75" aria-label="Compression quality">
+        <div class="range-labels"><span>Smaller file</span><span>Better quality</span></div>
+        <div class="target-row"><label for="target-size">Target file size <span>(optional)</span></label><div><input id="target-size" type="number" min="1" max="1000" placeholder="e.g. 200"><select id="target-unit" aria-label="Target size unit"><option value="KB">KB</option><option value="MB">MB</option></select></div></div>
+        <div class="quality-note"><span class="sparkle">✦</span><span><strong id="quality-label">Balanced</strong><br><span id="quality-description">A great balance of size and quality</span></span></div>
+        <button id="compress-btn" class="primary-button" type="button" disabled><span>Compress image</span><span aria-hidden="true">↗</span></button>
+        <p class="local-note"><span>◉</span> Compressed privately in your browser</p>
+      </div>
+    </section>
+
+    <section class="result card" id="result" hidden aria-live="polite">
+      <div class="result-heading"><div class="section-title"><span class="step">03</span><div><h2>Your file is ready</h2><p>Look at that — ready to download.</p></div></div><button id="reset-btn" class="reset-button" type="button">↻ <span>Start over</span></button></div>
+      <div class="result-grid">
+        <div class="preview-wrap"><img id="preview" alt="Compressed image preview"><iframe id="pdf-preview" title="PDF preview" hidden></iframe><span class="preview-badge">PREVIEW</span></div>
+        <div class="result-details">
+          <div class="stats"><div class="stat"><span>Original size</span><strong id="original-size">—</strong></div><div class="stat"><span>Output size</span><strong id="compressed-size">—</strong></div></div>
+          <div class="savings"><span class="savings-icon">↓</span><div><strong id="savings-percent">—</strong><span>smaller file size</span></div><span class="savings-sparkle">✦</span></div>
+          <a id="download-btn" class="primary-button download-button" download><span>Download file</span><span aria-hidden="true">↓</span></a>
+          <div id="extra-downloads" class="extra-downloads"></div>
+          <p class="format-note" id="format-note"></p>
+        </div>
+      </div>
+    </section>
+
+    <div class="ad-slot ad-bottom" aria-label="Advertisement space"><span>ADVERTISEMENT</span></div>
+
+    <section class="features" aria-label="Why PixelPress">
+      <div><span class="feature-icon green">⌑</span><p><strong>Private by design</strong><br>Your images never leave your device.</p></div>
+      <div><span class="feature-icon lilac">ϟ</span><p><strong>Quick &amp; effortless</strong><br>Get a smaller image in seconds.</p></div>
+      <div><span class="feature-icon peach">♡</span><p><strong>Always free</strong><br>No sign-up. No hidden fees.</p></div>
+    </section>
+  </main>
+  <footer><a class="brand footer-brand" href="#"><span class="brand-mark">P</span><span>pixel<span class="brand-light">press</span></span></a><span>Made for files that fit.</span></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
